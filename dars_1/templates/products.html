@@ -1,0 +1,19 @@
+<h1>
+    mavjud productlar
+</h1>
+
+
+<ul>
+
+    {% for i in object_list %}
+    <li>
+        <h5>
+            {{i.name}}
+        </h5>
+        <p>
+            {{i.avalible}}ta - {{i.price}} so`m
+        </p>
+    </li>
+    {% endfor %}
+
+</ul>

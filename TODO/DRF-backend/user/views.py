@@ -1,20 +1,23 @@
 from rest_framework.decorators import api_view
 from .serializers import UserRegistrationSerializer
 from rest_framework.response import Response
+from django.http import JsonResponse
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework_simplejwt.tokens import RefreshToken
 
 
 @permission_classes([IsAuthenticated])
-@api_view(['GET'])
-def user_info(request):
-    return Response({'user': {
-        'id': request.user.id,
-        'username': request.user.username,
-        'email': request.user.email,
-    }})
+@api_view(["GET"])
+def me(request):
+    return JsonResponse({
+        'user': {
+            'id': request.user.id,
+            'username': request.user.username,
+            'email': request.user.email
+        }
+    })
 
 
 @permission_classes([AllowAny])

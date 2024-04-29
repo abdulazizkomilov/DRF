@@ -16,13 +16,36 @@ export default {
     RouterLink,
   },
 
+  data() {
+    return {
+      todos: [],
+    };
+  },
+
   mounted() {
+    this.getTodoList();
   },
 
   methods: {
+    async getTodoList() {
+      const config = {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('user.access')}`,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        }
+      };
+      await axios.get('/todo/', config)
+        .then(response => {
+          this.todos = response.data
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    },
     logout() {
       this.userStore.removeToken()
-      location.assign('/login');
+      location.assign('/login')
     },
   },
 
@@ -31,7 +54,7 @@ export default {
 </script>
 
 <template>
-
+  
   <section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5">
     <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
       <!-- Start coding here -->
@@ -138,9 +161,8 @@ export default {
                     <p class="p-3 small">{{ userStore.user.email }}</p>
                   </li>
                 </ul>
-                <div class="py-1">
-                  <a @click="logout"
-                    class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+                <div class="py-1" style="cursor: pointer;">
+                  <a @click="logout" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100">
                     Logout
                   </a>
                 </div>
@@ -152,21 +174,21 @@ export default {
           <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>
-                <th scope="col" class="px-4 py-3">Product name</th>
-                <th scope="col" class="px-4 py-3">Category</th>
+                <th scope="col" class="px-4 py-3">Note name</th>
+                <th scope="col" class="px-4 py-3">Created</th>
                 <th scope="col" class="px-4 py-3">
                   <span class="sr-only">Actions</span>
                 </th>
               </tr>
             </thead>
             <tbody>
-              <tr class="border-b dark:border-gray-700">
+              <tr v-for="todo in todos" :key="todo.id" class="border-b dark:border-gray-700">
                 <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                  <RouterLink :to="{ name: 'detail', params: { id: 1 } }">
-                    Apple iMac 27&#34;
+                  <RouterLink :to="{ name: 'detail', params: { id: todo.id } }">
+                    {{ todo.name }}
                   </RouterLink>
                 </th>
-                <td class="px-4 py-3">PC</td>
+                <td class="px-4 py-3">{{ todo.created_format }}</td>
                 <td class="px-4 py-3 flex items-center justify-end">
                   <button id="apple-imac-27-dropdown-button" data-dropdown-toggle="apple-imac-27-dropdown"
                     class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"

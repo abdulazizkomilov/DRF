@@ -41,8 +41,6 @@ export const useUserStore = defineStore({
         },
 
         setUserInfo(user) {
-            console.log(user.id)
-            console.log(user.email)
             this.user.id = user.id
             this.user.email = user.email
             this.user.username = user.username
@@ -50,7 +48,6 @@ export const useUserStore = defineStore({
             localStorage.setItem('user.id', this.user.id)
             localStorage.setItem('user.email', this.user.email)
             localStorage.setItem('user.username', this.user.username)
-            console.log("done")
         },
 
         removeToken() {

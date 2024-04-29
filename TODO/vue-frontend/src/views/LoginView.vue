@@ -39,23 +39,23 @@ export default {
                 this.msg = true;
                 try {
                     const response = await axios.post('/user/login/', this.form);
-                    
+                    this.userStore.setToken(response.data)
                     axios.defaults.headers.common["Authorization"] = "Bearer " + response.data.access;
-
+                    
                 } catch (error) {
                     this.errors.push('Username yoki parol xato.');
                 }
             }
             if (this.errors.length === 0) {
                 await axios
-                    .get('/user/user-info/')
+                    .get('/user/me/')
                     .then(response => {
-                        console.log(response.data)
-                        this.userStore.setUserInfo(response.data.user);
-                        location.assign('/');
+                        this.userStore.setUserInfo(response.data['user']);
+
+                        location.assign('/')
                     })
                     .catch(error => {
-                        console.log('error', error)
+                        console.log(error)
                     })
             }
         }

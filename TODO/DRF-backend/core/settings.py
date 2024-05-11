@@ -106,7 +106,7 @@ USE_TZ = True
 
 
 
-
+# Static files here
 
 STATIC_URL = "static/"
 
